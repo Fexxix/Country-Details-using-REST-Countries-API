@@ -1,0 +1,335 @@
+$theme-font: white;
+$theme-elements: hsl(209, 23%, 22%);
+$header-height: 8%;
+$theme-background: hsl(209, 26%, 17%);
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: $theme-background;
+  color: $theme-font;
+  font-family: "Nunito Sans", system-ui;
+  height: 100vh;
+}
+
+@mixin flex($direction, $justify, $align) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+header {
+  background-color: $theme-elements;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  padding: 0.4em 0;
+  height: $header-height;
+  @include flex(row, space-between, center);
+  $items-margin: 1.8em;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.315);
+
+  h1 {
+    margin-left: $items-margin;
+    font-size: 1.3rem;
+  }
+
+  .theme-switcher {
+    margin-right: $items-margin;
+    font-size: 1.1rem;
+    @include flex(row, flex-start, center);
+
+    .moon {
+      fill: currentColor;
+      width: 15px;
+      height: 20px;
+      margin-right: 0.5em;
+      rotate: z -30deg;
+    }
+  }
+}
+
+.input-field {
+  height: 20%;
+  @include flex(row, space-between, center);
+  $items-margin: 2.5em;
+  margin-top: $header-height;
+
+  form {
+    width: 30%;
+    @include flex(row, stretch, center);
+    background-color: $theme-elements;
+    padding: 1em;
+    margin-left: $items-margin;
+    box-shadow: 0 0 0 8px rgb(0, 0, 0, 0.05);
+    border-radius: 0.25rem;
+
+    .search-icon {
+      stroke: currentColor;
+      fill: $theme-elements;
+    }
+
+    input {
+      width: 100%;
+      background-color: transparent;
+      outline: none;
+      border: none;
+      color: $theme-font;
+      font-size: 1.1rem;
+      margin-left: 0.5rem;
+
+      &::placeholder {
+        color: darken($theme-font, 15);
+      }
+    }
+
+    &:has(input:focus) {
+      box-shadow: 0 0 5px 2px hsl(209, 23%, 22%);
+    }
+  }
+
+  .filter-region {
+    width: 15%;
+    margin-right: $items-margin;
+    position: relative;
+    cursor: pointer;
+
+    .label {
+      border-radius: 0.25rem;
+      padding: 1em;
+      background-color: $theme-elements;
+      box-shadow: 0 0 0 8px rgb(0, 0, 0, 0.05);
+      width: 100%;
+      @include flex(row, space-between, center);
+
+      &::after {
+        content: "\2b9f";
+      }
+    }
+
+    .options-container {
+      position: absolute;
+      border-radius: 0.25rem;
+      $margin-top: 0.5em;
+      top: calc(100% + $margin-top);
+      width: 100%;
+      overflow: hidden;
+      background-color: $theme-elements;
+      z-index: 1;
+      transform-origin: top;
+      transform: scaleY(1);
+      transition: transform 250ms ease-in;
+      box-shadow: 0 0 0 8px rgb(0, 0, 0, 0.05);
+
+      .option {
+        width: 100%;
+        padding: 1em;
+        &:hover {
+          background-color: darken($theme-elements, 10%);
+        }
+      }
+    }
+
+    .options-container.disabled {
+      transform: scaleY(0);
+    }
+  }
+}
+
+.countries {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(450px, 1fr));
+  height: max-content;
+
+  .country-card {
+    margin: 1em;
+    background-color: $theme-elements;
+    border-radius: 0.5em;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 0 0 8px rgb(0, 0, 0, 0.05);
+
+    .img-container {
+      width: 100%;
+      height: 50%;
+      overflow: hidden;
+
+      img {
+        transition: all 300ms ease-in-out;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+
+    &:hover {
+      img {
+        scale: 1.2;
+      }
+    }
+
+    .info {
+      padding: 0 1rem;
+      pointer-events: none;
+
+      .name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 1.5rem;
+      }
+    }
+  }
+}
+
+.countries.no-results {
+  @include flex(row, center, flex-start);
+  text-align: center;
+  padding: 1em;
+  font-size: 1.2em;
+}
+
+.points-wrapper {
+  margin: 1.5rem;
+
+  .info-point {
+    color: hsl(0, 0%, 52%);
+    margin: 0.5rem 0;
+
+    &::before {
+      color: $theme-font;
+    }
+
+    &[data-native-name]::before {
+      content: "Native Name: ";
+    }
+
+    &[data-population]::before {
+      content: "Population: ";
+    }
+
+    &[data-region]::before {
+      content: "Region: ";
+    }
+
+    &[data-sub-region]::before {
+      content: "Sub Region: ";
+    }
+
+    &[data-capital]::before {
+      content: "Capital: ";
+    }
+
+    &[data-top-level-domain]::before {
+      content: "Top Level Domain: ";
+    }
+
+    &[data-currencies]::before {
+      content: "Currencies: ";
+    }
+
+    &[data-languages]::before {
+      content: "Languages: ";
+    }
+  }
+}
+
+.load-more {
+  @include flex(row, center, flex-start);
+  margin-top: 1rem;
+
+  button {
+    all: unset;
+    background-color: $theme-elements;
+    padding: 1rem 0.7rem;
+    border-radius: 0.25rem;
+
+    &:hover {
+      background-color: lighten($theme-elements, 10);
+      cursor: pointer;
+    }
+  }
+}
+
+.details-page {
+  position: fixed;
+  padding: 1em;
+  top: $header-height;
+  background-color: hsl(207, 26%, 17%);
+  width: 100%;
+  height: 100vh;
+  transition: top 250ms ease-in-out;
+
+  button {
+    all: unset;
+    cursor: pointer;
+    color: $theme-font;
+    border-radius: 0.15rem;
+    background-color: $theme-elements;
+    padding: 0.25em 1em;
+    @include flex(row, space-between, center);
+
+    svg {
+      margin-right: 0.5em;
+      pointer-events: none;
+    }
+  }
+
+  .country-details-wrapper {
+    @include flex(row, flex-start, center);
+    padding: 1em;
+    gap: 10vw;
+    height: 50%;
+    margin-top: 3rem;
+
+    .flag {
+      width: 50%;
+      height: 100%;
+    }
+
+    .country-details {
+      flex-grow: 1;
+      .points-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+
+        [data-population] {
+          grid-column-start: 1;
+          grid-row-start: 5;
+        }
+      }
+    }
+
+    .border-countries {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1em;
+
+      .border-country {
+        color: $theme-font;
+        border-radius: 0.15rem;
+        background-color: $theme-elements;
+        padding: 0.25em 1em;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.details-page.not-shown {
+  top: 100vh;
+}
+
+.dummy-image {
+  position: fixed;
+  top: -100vh;
+  transition: all 250ms ease-in-out;
+}
